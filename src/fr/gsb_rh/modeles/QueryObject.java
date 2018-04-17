@@ -49,12 +49,9 @@ public class QueryObject {
 			e.printStackTrace();
 		}finally{
 			try {
-				returnQuery.close();
-				query.close();
+//				returnQuery.close();
+//				query.close();
 				DbConnect.destroyDbConnect();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}finally{
 				returnQuery = null;
 				query = null;
