@@ -27,13 +27,6 @@ public class DbConnect{
 		}
 		catch(ClassNotFoundException e){
 			e.printStackTrace();
-		}finally{
-			try {
-				connexion.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 	/**
@@ -49,12 +42,13 @@ public class DbConnect{
 	 * */
 	public static void destroyDbConnect(){
 		try {
-			connexion = null;
 			connexion.close();
 		}
 		catch(SQLException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			connexion = null;
 		}
 	}
 }

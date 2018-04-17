@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import fr.gsb_rh.modeles.*;
 
 public class GSB_RH {
 
