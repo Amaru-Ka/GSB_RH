@@ -7,11 +7,11 @@ import java.sql.SQLException;
  * @version 1.0
  * @see QueryObject
  * */
-public class DbConnect {
+public class DbConnect{
 	private static Connection connexion;
 	private String url ="jdbc:mysql://localhost/gsb_appli_frais";
-	private String login="GSB";
-	private String password="GSB";
+	private String login = "GSB";
+	private String password = "GSB";
 	/**
 	 * Constructeur privé de l'objet DBConnect.
 	 * privé car on utilise un singleton pour y accéder. 
@@ -26,6 +26,13 @@ public class DbConnect {
 		}
 		catch(ClassNotFoundException e){
 			e.printStackTrace();
+		}finally{
+			try {
+				connexion.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	/**

@@ -31,16 +31,19 @@ public class QueryObject {
 	 */
 	public boolean estConnecte(String login , String mdp ){
 		boolean flag = false;
-		String select = "SELECT id "
+		String select = "SELECT login, mdp "
 				+ "FROM visiteur "
-				+ "WHERE login="+login+" "
-						+ "AND mdp="+mdp+""
+				+ "WHERE login='"+login+"'"
+						+ "AND mdp='"+mdp+"'"
 						+ "AND id_service = 3";
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
-			if(returnQuery != null)
+			if(returnQuery.first()){
+				
+			}
 				flag = true;
+				
 		}
 		catch (SQLException e){
 			e.printStackTrace();
