@@ -1,12 +1,12 @@
 package fr.gsb_rh.controleurs;
 import java.awt.Window;
 
-import fr.gsb_rh.modeles.QueryObject;
+import fr.gsb_rh.modeles.RequeteBase;
 import fr.gsb_rh.vues.Login;
 
-public class Controler {
+public class Controlleur {
 	
-	public Controler(){
+	public Controlleur(){
 		
 	}
 	
@@ -16,6 +16,6 @@ public class Controler {
 	}
 	
 	public boolean verifierMdp(String log, String mdp){
-		return QueryObject.estConnecte(log, mdp);
+		return RequeteBase.estConnecte(log, mdp);
 	}
 }

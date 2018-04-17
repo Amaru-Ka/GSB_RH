@@ -10,15 +10,15 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import fr.gsb_rh.controleurs.Controler;
+import fr.gsb_rh.controleurs.Controlleur;
 
 public class Login extends JFrame implements ActionListener{
-	protected Controler controleur;
+	protected Controlleur controleur;
 	protected Champ saisieLogin;
 	protected Champ saisieMdp;
 	
 	
-	public Login(Controler controleur){
+	public Login(Controlleur controleur){
 		super();
 		this.controleur = controleur;
 		this.initComponents();
@@ -36,7 +36,7 @@ public class Login extends JFrame implements ActionListener{
 		boutonValider.addActionListener(this);
 		
 		saisieLogin = new Champ("Login: ");
-		saisieMdp = new Champ("Mot de passe :");
+		saisieMdp = new Champ("Mot de passe :","");
 		
 		panelLogin.add(saisieLogin);
 		panelLogin.add(saisieMdp);
@@ -47,11 +47,11 @@ public class Login extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		if(this.controleur.verifierMdp(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansSaisie())){
+		if(this.controleur.verifierMdp(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
 			JOptionPane.showMessageDialog(null,"tout est ok","Valider",JOptionPane.ERROR_MESSAGE);
 			this.dispose();
 		}
-		else JOptionPane.showMessageDialog(null,"Nope!!","Valider",JOptionPane.ERROR_MESSAGE);
+		else JOptionPane.showMessageDialog(null,this.saisieMdp.getDansMdp(),"Valider",JOptionPane.ERROR_MESSAGE);
 		
 		
 	}

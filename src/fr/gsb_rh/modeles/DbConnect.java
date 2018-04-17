@@ -6,7 +6,7 @@ import java.sql.SQLException;
  * Classe de connexion à la base de données de GSB.
  * @author antoine
  * @version 1.0
- * @see QueryObject
+ * @see RequeteBase
  * */
 public class DbConnect{
 	private static Connection connexion;
