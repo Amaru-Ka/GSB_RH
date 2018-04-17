@@ -3,9 +3,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Hashtable;
-import fr.gsb_rh.modeles.*;
+//import fr.gsb_rh.modeles.*;
 
 /**
  * Classe de manipulation des données que contient la bdd gsb_appli_frais
@@ -16,8 +16,8 @@ import fr.gsb_rh.modeles.*;
  * 
  */
 public class QueryObject {
-	private Statement query = null;
-	private ResultSet returnQuery = null; 
+	private static Statement query = null;
+	private static ResultSet returnQuery = null; 
 	/**
 	 * Constructeur par défaut de l'objet QueryObject
 	 */
@@ -31,7 +31,7 @@ public class QueryObject {
 	 * @param mdp String : Son mot de passe
 	 * @return flag boolean : vrai si ses login/mdp correspondent et qu'il est du bon service, false sinon.
 	 */
-	public boolean estConnecte(String login , String mdp ){
+	public static boolean estConnecte(String login , String mdp ){
 		boolean flag = false;
 		String select = "SELECT login, mdp "
 				+ "FROM visiteur "
@@ -69,7 +69,7 @@ public class QueryObject {
 	 * @param login String : Le login de l'utilisateur voulant se connecter
 	 * @return id String : Son identifiant unique
 	 */
-	public String getIdConnecte(String login){
+	public static String getIdConnecte(String login){
 		String id = "";
 		String select = "SELECT id FROM visiteur WHERE login="+login+"";
 		try{
@@ -89,7 +89,7 @@ public class QueryObject {
 	 * @param int : Le nombre de caractères souhaité
 	 * @return String : Contient un mot de passe aléatoire sur X caractères allant de a-z A-Z 0-9
 	 */
-	public String genererString(int x){
+	public static String genererString(int x){
 		int lower = 0; 
 		int higher = 62; 
 		String password = "";
@@ -114,10 +114,10 @@ public class QueryObject {
 	 * @param idService : Son numéro de Service (1 = Visiteur, 2 = Comptable ,3 = RH)
 	 * 
 	 */
-	public void creerUser(String nom ,String prenom ,String adresse, String cp, String ville,String dateEmbauche, int idService){
+	public static void creerUser(String nom ,String prenom ,String adresse, String cp, String ville,String dateEmbauche, int idService){
 		String login = nom.substring(0,1) + prenom;
-		String mdp = this.genererString(8);
-		String id = this.genererString(3);
+		String mdp = QueryObject.genererString(8);
+		String id = QueryObject.genererString(3);
 		String insert = "INSERT INTO "
 				+ "`visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`, `id_service`) "
 				+ "VALUES ("+id+","+ nom +","+prenom+","+login+","+mdp+","+adresse+","+cp+","+ville+","+dateEmbauche+","+idService+")"; 
@@ -142,7 +142,7 @@ public class QueryObject {
 	 * @param dateDepart String : La date de son départ de l'entreprise
 	 * @param idService int : Son numéro de Service (1 = Visiteur, 2 = Comptable ,3 = RH)
 	 */
-	public void modifierUser(String nom ,String prenom ,String adresse, String cp, String ville,String dateEmbauche,String dateDepart, int idService){
+	public static void modifierUser(String nom ,String prenom ,String adresse, String cp, String ville,String dateEmbauche,String dateDepart, int idService){
 		String login = nom.substring(0,1) + prenom;
 		String update = "UPDATE "
 				+ "`visiteur`(`nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`,`dateDepart`, `id_service`) "
@@ -168,7 +168,7 @@ public class QueryObject {
 	 * @param x : int : Entier correspondant au service souhaité
 	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et son nom en valeur de chaque utilisateur
 	 */
-	public Hashtable<String,String> getTousLesUsersService(int x){
+	public static Hashtable<String,String> getTousLesUsersService(int x){
 		Hashtable<String,String> users = new Hashtable<String,String>();
 		try{
 			String select = "SELECT * "
@@ -190,7 +190,7 @@ public class QueryObject {
 	 * Méthode de récupération de tous les utilisateurs de la base de données gsb_appli_frais
 	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et le nom en valeur pour chaque utilisateur
 	 */
-	public Hashtable<String,String> getTousLesUsers(){
+	public static Hashtable<String,String> getTousLesUsers(){
 		Hashtable<String,String> users = new Hashtable<String,String>();
 		try{
 			String select = "SELECT * FROM visiteur"; 
