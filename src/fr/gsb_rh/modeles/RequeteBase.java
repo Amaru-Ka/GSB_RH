@@ -10,7 +10,7 @@ import java.util.Hashtable;
 /**
  * Classe de manipulation des données que contient la bdd gsb_appli_frais
  * 
- * @author antoine
+ * @author antoine & audrey
  * @version 1.0
  * @see DbConnect.java
  * 
@@ -175,6 +175,10 @@ public class RequeteBase {
 		}
 	}
 	
+	/**
+	 * Methode qui renvoie tous les utilisateurs qui ne sont plus dans l'entreprise.
+	 * @return lesEmployes ArrayList<Employe>: Contient les objets Employe 
+	 */
 	public static ArrayList<Employe> getLesUsersParti(){
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
 		try{
@@ -182,8 +186,7 @@ public class RequeteBase {
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				Employe unEmploye = new Employe(returnQuery.getString("id"),
-												returnQuery.getString("nom"),
+				Employe unEmploye = new Employe(returnQuery.getString("nom"),
 												returnQuery.getString("prenom"),
 												returnQuery.getString("adresse"),
 												returnQuery.getString("cp"),
@@ -288,8 +291,7 @@ public class RequeteBase {
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				Employe unEmploye = new Employe(returnQuery.getString("id"),
-												returnQuery.getString("nom"),
+				Employe unEmploye = new Employe(returnQuery.getString("nom"),
 												returnQuery.getString("prenom"),
 												returnQuery.getString("adresse"),
 												returnQuery.getString("cp"),
@@ -328,13 +330,12 @@ public class RequeteBase {
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				Employe unEmploye = new Employe(returnQuery.getString("id"),
-						returnQuery.getString("nom"),
-						returnQuery.getString("prenom"),
-						returnQuery.getString("adresse"),
-						returnQuery.getString("cp"),
-						returnQuery.getString("ville"),
-						returnQuery.getInt("DateEmbauche"));
+				Employe unEmploye = new Employe(returnQuery.getString("nom"),
+												returnQuery.getString("prenom"),
+												returnQuery.getString("adresse"),
+												returnQuery.getString("cp"),
+												returnQuery.getString("ville"),
+												returnQuery.getInt("DateEmbauche"));
 				lesEmployes.add(unEmploye);
 			}
 		}
@@ -355,4 +356,5 @@ public class RequeteBase {
 		}
 		return lesEmployes;
 	}
+
 }

@@ -25,7 +25,8 @@ public class Employe {
 		
 	}
 	/**
-	 * Constructeur surchargé d'Employe 
+	 * Constructeur surchargé d'Employe == Connaitre l'Employe qui procède à des modifications
+	 * 
 	 * @param idUser
 	 * @param nomUser
 	 * @param prenomUser
@@ -39,27 +40,26 @@ public class Employe {
 	}
 	
 	/**
-	 * Constructeur surchargé d'Employe
-	 * @param id
+	 * Constructeur surchargé d'Employe == Création d'un Employe dans la base
+
 	 * @param nom
 	 * @param prenom
-	 * @param login
-	 * @param mdp
 	 * @param adresse
 	 * @param CP
 	 * @param ville
 	 * @param dateEmbauche
-	 * @param telephone
-	 * @param email
 	 */
-	public Employe(String idUser, String nomUser, String prenomUser, String adresseUser, String CPUser, String villeUser, int dateEmbaucheUser){
-		this.setId(idUser);
+	public Employe(String nomUser, String prenomUser, String adresseUser, String CPUser, String villeUser, int dateEmbaucheUser){
 		this.setNom(nomUser);
 		this.setPrenom(prenomUser);
 		this.setAdresse(adresseUser);
 		this.setCP(CPUser);
 		this.setVille(villeUser);
 		this.setDateEmbauche(dateEmbaucheUser);
+		
+		this.setLogin();
+		this.setMdp();
+		this.setId();
 	}
 	/**
 	 * GETTERS ET SETTERS D'EMPLOYE
@@ -67,14 +67,23 @@ public class Employe {
 	public String getId(){
 		return id;
 	}
+	public void setId(){
+		this.id = this.genererString(3);
+	}
 	public void setId(String id){
 		this.id = id;
 	}
 	public String getlogin() {
 		return login;
-	}	
+	}
+	public void setLogin(){
+		this.login = this.prenom.substring(0,1) + " " + this.nom;
+	}
 	public String getMdp() {
 		return mdp; 
+	}
+	public void setMdp(){
+		this.mdp = this.genererString(8);
 	}
 	public String getNom() {
 		return nom;
@@ -133,12 +142,12 @@ public class Employe {
 
 	
 	/**
-	 * Fonction de génération de mot de passe afin de créer un mdp aléatoire à la création de chaque utilisateur.
-	 * @see creerUser
+	 * Fonction de génération de mot de passe afin de créer un mdp ou un identifiant aléatoire à la création de chaque utilisateur.
+	 * 
 	 * @param int : Le nombre de caractères souhaité
 	 * @return String : Contient un mot de passe aléatoire sur X caractères allant de a-z A-Z 0-9
 	 */
-	public static String genererString(int x){
+	public String genererString(int x){
 		int lower = 0; 
 		int higher = 62; 
 		String password = "";
