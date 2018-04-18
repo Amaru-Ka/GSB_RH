@@ -9,7 +9,9 @@ public class Employe {
 	private String id; 
 	private String nom; 
 	private String prenom; 
-	private int DateEmbauche; 
+	private String dateNaissance;
+	private String DateEmbauche;
+	private String dateDepart;
 	private String adresse; 
 	private String CP; 
 	private String Ville; 
@@ -17,6 +19,7 @@ public class Employe {
 	private String Mail; 
 	private String login; 
 	private String mdp; 
+	
 	private int idService;
 	/**
 	 * Constructeur par défaut d'Employe
@@ -25,7 +28,7 @@ public class Employe {
 		
 	}
 	/**
-	 * Constructeur surchargé d'Employe == Connaitre l'Employe qui procède à des modifications
+	 * Constructeur surchargé d'Employe == Connaitre l'Employe qui procède à des modifications / Récupérer une liste d'employés
 	 * 
 	 * @param idUser
 	 * @param nomUser
@@ -44,20 +47,27 @@ public class Employe {
 
 	 * @param nom
 	 * @param prenom
+	 * @param dateNaissance
 	 * @param adresse
 	 * @param CP
 	 * @param ville
 	 * @param dateEmbauche
 	 */
-	public Employe(String nomUser, String prenomUser, String adresseUser, String CPUser, String villeUser, int dateEmbaucheUser){
+	
+	public Employe(String nomUser, String prenomUser,String dateNaissance, String adresseUser, String CPUser, String villeUser, String telephone,String mail, String dateEmbaucheUser,int idService){
 		this.setNom(nomUser);
 		this.setPrenom(prenomUser);
 		this.setAdresse(adresseUser);
 		this.setCP(CPUser);
 		this.setVille(villeUser);
+		this.setMail(mail);
+		this.setTelephone(telephone);
 		this.setDateEmbauche(dateEmbaucheUser);
-		
+		this.setDateNaissance(dateNaissance);
 		this.setLogin();
+		this.setIdService(idService);
+		
+		//Setter qui génèrent aléatoirement un id ou un mot de passe 
 		this.setMdp();
 		this.setId();
 	}
@@ -70,76 +80,101 @@ public class Employe {
 	public void setId(){
 		this.id = this.genererString(3);
 	}
+	//setter surchargé lors de la récupération des employés en base
 	public void setId(String id){
 		this.id = id;
 	}
+	
+	public String getDateNaissance(){
+		return this.dateNaissance;
+	}
+	public void setDateNaissance(String date){
+		this.dateNaissance = date;
+	}
+	
+	public String getDateDepart(){
+		return this.dateDepart;
+	}
+	public void setDateDepart(String date){
+		this.dateDepart = date;
+	}
+	
 	public String getlogin() {
 		return login;
 	}
 	public void setLogin(){
 		this.login = this.prenom.substring(0,1) + " " + this.nom;
 	}
+	
 	public String getMdp() {
 		return mdp; 
 	}
 	public void setMdp(){
 		this.mdp = this.genererString(8);
 	}
+	
 	public String getNom() {
 		return nom;
 	}
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+	
 	public String getPrenom() {
 		return prenom;
 	}
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
-	public int getDateEmbauche() {
+
+	public String getDateEmbauche() {
 		return DateEmbauche;
 	}
-	public void setDateEmbauche(int dateEmbaucheUser) {
+	public void setDateEmbauche(String dateEmbaucheUser) {
 		DateEmbauche = dateEmbaucheUser;
 	}
+	
 	public String getAdresse() {
 		return adresse;
 	}
 	public void setAdresse(String adresse) {
 		this.adresse = adresse;
 	}
+	
 	public String getCP() {
 		return CP;
 	}
 	public void setCP(String cP) {
 		CP = cP;
 	}
+	
 	public String getVille() {
 		return Ville;
 	}
 	public void setVille(String ville) {
 		Ville = ville;
 	}
+	
 	public String getTelephone() {
 		return Telephone;
 	}
 	public void setTelephone(String telephone) {
 		Telephone = telephone;
 	}
+	
 	public String getMail() {
 		return Mail;
 	}
 	public void setMail(String mail) {
 		Mail = mail;
 	}
+	
 	public int getIdService() {
 		return idService;
 	}
 	public void setIdService(int idService) {
 		this.idService = idService;
 	}
-
 	
 	/**
 	 * Fonction de génération de mot de passe afin de créer un mdp ou un identifiant aléatoire à la création de chaque utilisateur.
@@ -154,15 +189,9 @@ public class Employe {
 		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		
 		for(int i = 0 ; i < x ; i++){
-			int y = (int)(Math.random() * (higher + 1 -lower)) + lower;
+			int y = (int)(Math.random() * (higher + 1 - lower)) + lower;
 			password += chars.charAt(y);
 		}
 		return password;
 	}
-
-	public void setMdp(String mdp) {
-		this.mdp = mdp;
-	}
-		
-	
 }

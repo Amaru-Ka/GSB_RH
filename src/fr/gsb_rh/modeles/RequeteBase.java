@@ -16,8 +16,8 @@ import java.util.Hashtable;
  * 
  */
 public class RequeteBase {
-//	private static Statement query;
-//	private static ResultSet returnQuery; 
+	private static Statement query;
+	private static ResultSet returnQuery; 
 	
 	/**
 	 * Constructeur par défaut de l'objet QueryObject
@@ -35,11 +35,9 @@ public class RequeteBase {
 	 */
 	public static boolean estConnecte(String login , String mdp ){
 		boolean flag = false;
-		ResultSet returnQuery = null;
-		
+		returnQuery = null; 
 		String select = "SELECT login, mdp "
 				+ "FROM visiteur WHERE login='"+login+"' AND mdp='"+mdp+"' AND id_service = 3";
-		
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
@@ -51,14 +49,13 @@ public class RequeteBase {
 		}finally{
 				try{
 					returnQuery.close();
-				}catch (SQLException e) {
-					// TODO Auto-generated catch block
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}finally{
 					DbConnect.destroyDbConnect();
 					returnQuery = null;
-			}
-		}
+				}
+			}	
 		return flag;	
 		}
 	/**
@@ -70,7 +67,6 @@ public class RequeteBase {
 	public static Employe getIdConnecte(String login){
 		String select = "SELECT id,nom,prenom,id_service FROM visiteur WHERE login="+login+"";
 		Employe unEmploye = null;
-		ResultSet returnQuery = null;
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
@@ -99,20 +95,19 @@ public class RequeteBase {
 	 * 
 	 * @param unEmploye
 	 */
-	public static void creerUser(Employe unEmploye){
-		ResultSet returnQuery = null;
+	public static void AjoutEmploye(Employe unEmploye){
 		String insert = "INSERT INTO "
 				+ "`visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`, `id_service`) "
-				+ "VALUES ("+ unEmploye.getId() +","
-						+ ""+ unEmploye.getNom() +","
-						+ ""+ unEmploye.getPrenom() +","
-						+ ""+ unEmploye.getlogin() +","
-						+ ""+ unEmploye.getMdp() +","
-						+ ""+ unEmploye.getAdresse() +","
-						+ ""+ unEmploye.getCP() +","
-						+ ""+ unEmploye.getVille() +","
-						+ ""+ unEmploye.getDateEmbauche() +","
-						+ ""+ unEmploye.getIdService() +")"; 
+				+"VALUES ('"+ unEmploye.getId() +"',"
+					   + "'"+ unEmploye.getNom() +"',"
+					   + "'"+ unEmploye.getPrenom() +"',"
+					   + "'"+ unEmploye.getlogin() +"',"
+					   + "'"+ unEmploye.getMdp() +"',"
+					   + "'"+ unEmploye.getAdresse() +"',"
+					   + "'"+ unEmploye.getCP() +"',"
+					   + "'"+ unEmploye.getVille() +"',"
+					   + "'"+ unEmploye.getDateEmbauche() +"',"
+					   + "'"+ unEmploye.getIdService() +"')"; 
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			dbConnect.createStatement().executeUpdate(insert);
@@ -128,6 +123,7 @@ public class RequeteBase {
 			}finally{
 				DbConnect.destroyDbConnect();
 				returnQuery = null;
+				query = null;
 			}
 			
 		}
@@ -140,17 +136,16 @@ public class RequeteBase {
 	 * @param unEmploye
 	 */
 	public static void modifierEmploye(Employe unEmploye){
-		ResultSet returnQuery = null;
 		String update = "UPDATE "
 				+ "`visiteur`(`nom`, `prenom`, `login`, `adresse`, `cp`, `ville`, `dateEmbauche`,`id_service`) "
-				+ "SET(`nom`="+ unEmploye.getNom() +","
-				+ "`prenom`="+ unEmploye.getPrenom() +","
-				+ "`login`="+ unEmploye.getlogin() +","
-				+ "`adresse`="+ unEmploye.getAdresse() +","
-				+ "`cp`="+ unEmploye.getCP() +","
-				+ "`ville`="+ unEmploye.getVille() +","
-				+ "`dateEmbauche`="+ unEmploye.getDateEmbauche() +","
-				+ "`id_service`="+ unEmploye.getIdService() +")"; 		
+				+ "SET(`nom`=      '"+ unEmploye.getNom() +"',"
+				+ "`prenom`=       '"+ unEmploye.getPrenom() +"',"
+				+ "`login`=        '"+ unEmploye.getlogin() +"',"
+				+ "`adresse`=      '"+ unEmploye.getAdresse() +"',"
+				+ "`cp`=           '"+ unEmploye.getCP() +"',"
+				+ "`ville`=        '"+ unEmploye.getVille() +"',"
+				+ "`dateEmbauche`= '"+ unEmploye.getDateEmbauche() +"',"
+				+ "`id_service`=   '"+ unEmploye.getIdService() +"')"; 		
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			dbConnect.createStatement().executeUpdate(update);
@@ -160,12 +155,14 @@ public class RequeteBase {
 		}finally{
 			try{
 				returnQuery.close();
+				query.close();
 			}catch (SQLException e){
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally{
 				DbConnect.destroyDbConnect();
 				returnQuery = null;
+				query = null;
 			}
 			
 		}
@@ -176,20 +173,16 @@ public class RequeteBase {
 	 * @return lesEmployes ArrayList<Employe>: Contient les objets Employe 
 	 */
 	public static ArrayList<Employe> getLesUsersParti(){
-		ResultSet returnQuery = null;
-		Statement query = null;		
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
 		try{
 			String select = "SELECT * FROM visiteur WHERE dateDepart IS NOT NULL"; 
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				Employe unEmploye = new Employe(returnQuery.getString("nom"),
-												returnQuery.getString("prenom"),
-												returnQuery.getString("adresse"),
-												returnQuery.getString("cp"),
-												returnQuery.getString("ville"),
-												returnQuery.getInt("DateEmbauche"));
+				Employe unEmploye = new Employe(returnQuery.getString("id"),
+						returnQuery.getString("nom"),
+						returnQuery.getString("prenom"),
+						returnQuery.getInt("id_service"));
 				lesEmployes.add(unEmploye);
 			}
 		}catch(SQLException e){
@@ -216,15 +209,16 @@ public class RequeteBase {
 	 * 
 	 * @return lesServices Hashtable<Integer,String> : Dictionnaire contenant les services
 	 */
-	public static Hashtable<Integer,String> getLesServices(){
-		ResultSet returnQuery = null;
-		Hashtable<Integer,String> lesServices = new Hashtable<Integer,String>();
+	public static String[] getLesServices(){
+		int i = 0;
+		String[] lesServices = {};
 		String select = "SELECT * FROM service";
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
 			while(returnQuery.next()){
-				lesServices.put(returnQuery.getInt("id_service"), returnQuery.getString("libelle_service"));
+				lesServices[i] = returnQuery.getString("libelle_service");
+				i++;
 			}
 		}catch (SQLException e){
 			e.printStackTrace();
@@ -248,8 +242,6 @@ public class RequeteBase {
 	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et le nom en valeur pour chaque utilisateur
 	 */
 	public static ArrayList<Employe> getTousLesUsers(){
-		ResultSet returnQuery = null;
-		Statement query = null;
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
 		Employe unEmploye = null;
 		try{
@@ -284,20 +276,16 @@ public class RequeteBase {
 	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et le nom en valeur pour chaque utilisateur
 	 */
 	public static ArrayList<Employe> getTousLesUsersEnFonction(){
-		ResultSet returnQuery = null;
-		Statement query = null;
 		ArrayList<Employe>  lesEmployes = new ArrayList<Employe>();
 		try{
 			String select = "SELECT * FROM visiteur WHERE dateDepart IS NULL"; 
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				Employe unEmploye = new Employe(returnQuery.getString("nom"),
+				Employe unEmploye = new Employe(returnQuery.getString("id"),
+												returnQuery.getString("nom"),
 												returnQuery.getString("prenom"),
-												returnQuery.getString("adresse"),
-												returnQuery.getString("cp"),
-												returnQuery.getString("ville"),
-												returnQuery.getInt("DateEmbauche"));
+												returnQuery.getInt("id_service"));
 				lesEmployes.add(unEmploye);
 			}
 		}catch(SQLException e){
@@ -325,20 +313,16 @@ public class RequeteBase {
 	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et son nom en valeur de chaque utilisateur
 	 */
 	public static ArrayList<Employe> getTousLesUsers(int x){
-		ResultSet returnQuery = null;
-		Statement query = null;
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
 		try{
 			String select = "SELECT * FROM visiteur WHERE id_service = "+x+""; 
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				Employe unEmploye = new Employe(returnQuery.getString("nom"),
-												returnQuery.getString("prenom"),
-												returnQuery.getString("adresse"),
-												returnQuery.getString("cp"),
-												returnQuery.getString("ville"),
-												returnQuery.getInt("DateEmbauche"));
+				Employe unEmploye = new Employe(returnQuery.getString("id"),
+						returnQuery.getString("nom"),
+						returnQuery.getString("prenom"),
+						returnQuery.getInt("id_service"));
 				lesEmployes.add(unEmploye);
 			}
 		}

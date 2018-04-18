@@ -1,15 +1,21 @@
 package fr.gsb_rh.controleurs;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
+import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JPanel;
 
 import fr.gsb_rh.modeles.Employe;
 import fr.gsb_rh.modeles.RequeteBase;
-import fr.gsb_rh.vues.Login;
 import fr.gsb_rh.vues.FenetreAppli;
-import fr.gsb_rh.vues.*;
+import fr.gsb_rh.vues.Login;
+import fr.gsb_rh.vues.PanneauAjout;
+import fr.gsb_rh.vues.PanneauModifier;
 
 public class Controlleur {
-	private int remonterInformations;
+	
 	public Controlleur(){
 		
 	}
@@ -18,40 +24,54 @@ public class Controlleur {
 		Login.setVisible(true);
 	}
 	
-	public void lancerAppli(){	
+	public void lancerAppli(){
 		FenetreAppli appliRH = new FenetreAppli();
-//		appliRH.addOnglets(this.listerLibelles()this.AjoutPanels());
+		appliRH.AjoutOnglets(this.listerLibelles(), this.listerPanels());
 		appliRH.setVisible(true);
 	}
 	
-//	private JPanel[] AjoutPanels(){
-//		JPanel panels[] = {new PanneauAjout(RequeteBase.listerIdStatut(),this), new PanneauModification(RequeteBase.listerEmployes(), this)};
-//		return panels;
-//	}
+	private JPanel[] listerPanels(){
+		JPanel panels[] = {new PanneauAjout(this), new PanneauModifier()};
+		return panels;
+	}
+	
+	private String[] listerLibelles(){
+		String libelles[] = {"Ajout","Modification"};
+		return libelles;
+	}
 	
 	public boolean verifierMdp(String log, String mdp){
 		return RequeteBase.estConnecte(log, mdp);
 	}
 	
 	public void ajouterEmploye(Employe employe){
-		RequeteBase.creerUser(employe);
+		RequeteBase.AjoutEmploye(employe);
 	}
 	
 //	public Employe rechercherEmploye(String selection){
 //		return RequeteBase.lireEmploye(selection);
 //	}
 	
+	public String[] listerService(){
+		return RequeteBase.getLesServices();
+	}
+	
 	public void majEmploye(Employe employe){
 		RequeteBase.modifierEmploye(employe);
 	}
 	
-	private  String[] listerLibelles(){
-		String libelles[] = {"Ajout","Modification"};
-		return libelles;
+	public void creerEmploye(String nom, String prenom,String dateNaissance, String adresse, String cp, String ville, String telephone,String mail, String dateEmbauche,int idService){
+		Employe unEmploye = new Employe(nom,prenom,dateNaissance,adresse,cp,ville,telephone,mail,dateEmbauche,idService);
+		RequeteBase.AjoutEmploye(unEmploye);
 	}
-//	
-//	public void ListerServices (){
-//		
-//	}
+	/**
+	 * Methode de formattage de la date afin qu'elle corresponde au format date de MySQL
+	 * @param date String : date au format jjmmaaa
+	 * @return date String : date au format aaaa-mm-jj
+	 */
+	public String formatterDate(String date){
+		String modifDate = date.substring(4, 8) +"-"+ date.substring(2,4) +"-"+ date.substring(0,2);
+		return date;
+	}
 	
 }
