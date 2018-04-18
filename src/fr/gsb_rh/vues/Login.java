@@ -25,8 +25,8 @@ public class Login extends JFrame implements ActionListener{
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setTitle("Application GSB_RH");
 		setSize(300,300);
-		setResizable(true);
-		setLocationRelativeTo(null);
+		setResizable(false);
+//		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	}
@@ -48,7 +48,9 @@ public class Login extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(this.controleur.verifierMdp(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
-			JOptionPane.showMessageDialog(null,"tout est ok","Valider",JOptionPane.ERROR_MESSAGE);
+			//Lancement de la fenetre principale
+			this.controleur.lancerAppli();
+			//Fermeture de la fenêtre de login
 			this.dispose();
 		}
 		else JOptionPane.showMessageDialog(null,this.saisieMdp.getDansMdp(),"Valider",JOptionPane.ERROR_MESSAGE);

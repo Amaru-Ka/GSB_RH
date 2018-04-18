@@ -5,9 +5,11 @@ import javax.swing.JPanel;
 import fr.gsb_rh.modeles.Employe;
 import fr.gsb_rh.modeles.RequeteBase;
 import fr.gsb_rh.vues.Login;
+import fr.gsb_rh.vues.FenetreAppli;
+import fr.gsb_rh.vues.*;
 
 public class Controlleur {
-	
+	private int remonterInformations;
 	public Controlleur(){
 		
 	}
@@ -16,11 +18,11 @@ public class Controlleur {
 		Login.setVisible(true);
 	}
 	
-//	public void lancerAppli(){	
-//		FenetreAppli appliRH = new FenetreAppli();
-//		FenetreAppli.addOnglets(this.listerLibelles(), this.AjoutPanels());
-//		FenetreAppli.setVisible(true);
-//	}
+	public void lancerAppli(){	
+		FenetreAppli appliRH = new FenetreAppli();
+//		appliRH.addOnglets(this.listerLibelles()this.AjoutPanels());
+		appliRH.setVisible(true);
+	}
 	
 //	private JPanel[] AjoutPanels(){
 //		JPanel panels[] = {new PanneauAjout(RequeteBase.listerIdStatut(),this), new PanneauModification(RequeteBase.listerEmployes(), this)};
@@ -43,10 +45,10 @@ public class Controlleur {
 		RequeteBase.modifierEmploye(employe);
 	}
 	
-//	private String[] listerLibelles(){
-//		String libelles[] = {"Ajout","Modification"};
-//		return libelles;
-//	}
+	private  String[] listerLibelles(){
+		String libelles[] = {"Ajout","Modification"};
+		return libelles;
+	}
 //	
 //	public void ListerServices (){
 //		
