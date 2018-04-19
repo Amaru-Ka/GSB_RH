@@ -71,7 +71,7 @@ public class Controlleur {
 	 */
 	public String formatterDate(String date){
 		String modifDate = date.substring(4, 8) +"-"+ date.substring(2,4) +"-"+ date.substring(0,2);
-		return date;
+		return modifDate;
 	}
 	
 }

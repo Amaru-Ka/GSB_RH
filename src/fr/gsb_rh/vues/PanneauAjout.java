@@ -34,11 +34,11 @@ public class PanneauAjout extends JPanel implements ActionListener {
 	private Champ telephone;
 	private Champ email;
 	private String idService;
-	
+	private JComboBox<String> listService;
 	public PanneauAjout(Controlleur Controlleur){
 		super();
-		this.initComponents();
 		this.controleur = Controlleur;
+		this.initComponents();
 	}
 	public void initComponents(){
 		
@@ -61,19 +61,14 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		this.telephone = new Champ("N° Téléphone: ");
 		this.email = new Champ("Adresse e-mail: ");
 		//Liste des services
-		String[] data = {"51321", "654534", "65465", "54441"};
-		JComboBox<String> list = new JComboBox<String>(data);
-		JScrollPane scroll = new JScrollPane();
-		content.add(list);
-//		
-//		JList<String> liste = new JList(data);
-//		JScrollPane scroll = new JScrollPane(liste);
-//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//		content.add(scroll);
-
+		String[] data = this.controleur.listerService();
+		listService = new JComboBox<String>(data);
+		listService.setPreferredSize(new Dimension(150,30));
+		
 		JLabel titre = new JLabel("Ajouter un nouvel employé");
 		//Add dans les différents panneaux.
 		table.add(titre);
+		
 		content.add(this.nom);
 		content.add(this.prenom);
 		content.add(this.dateNaissance);
@@ -83,6 +78,7 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		content.add(this.ville);
 		content.add(this.telephone);
 		content.add(this.email);
+		content.add(listService);
 		
 		//Boutons 
 		JButton valider = new JButton("Valider");
@@ -108,8 +104,6 @@ public class PanneauAjout extends JPanel implements ActionListener {
 			this.telephone.effacerSaisie();
 			this.email.effacerSaisie();			
 		}else{
-			int dateNaiss = Integer.parseInt(this.dateNaissance.getDansSaisie());
-			int dateEmbauche = Integer.parseInt(this.DateEmbauche.getDansSaisie());
 			this.controleur.creerEmploye(this.nom.getDansSaisie(),
 					this.prenom.getDansSaisie(),
 					this.controleur.formatterDate(this.dateNaissance.getDansSaisie()),
@@ -119,7 +113,7 @@ public class PanneauAjout extends JPanel implements ActionListener {
 					this.telephone.getDansSaisie(),
 					this.email.getDansSaisie(),
 					this.controleur.formatterDate(this.DateEmbauche.getDansSaisie()),
-					1);
+					this.listService.getSelectedIndex()+1);
 
 		}
 	}

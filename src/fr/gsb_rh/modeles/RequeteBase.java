@@ -97,7 +97,7 @@ public class RequeteBase {
 	 */
 	public static void AjoutEmploye(Employe unEmploye){
 		String insert = "INSERT INTO "
-				+ "`visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`, `id_service`) "
+				+ "`visiteur`(`id`, `nom`, `prenom`, `login`, `mdp`, `adresse`, `cp`, `ville`, `dateEmbauche`, `id_service`, `telephone`,`email`) "
 				+"VALUES ('"+ unEmploye.getId() +"',"
 					   + "'"+ unEmploye.getNom() +"',"
 					   + "'"+ unEmploye.getPrenom() +"',"
@@ -107,25 +107,16 @@ public class RequeteBase {
 					   + "'"+ unEmploye.getCP() +"',"
 					   + "'"+ unEmploye.getVille() +"',"
 					   + "'"+ unEmploye.getDateEmbauche() +"',"
-					   + "'"+ unEmploye.getIdService() +"')"; 
+					   + "'"+ unEmploye.getIdService() +"',"
+					   + "'"+ unEmploye.getTelephone() +"',"
+					   + "'"+ unEmploye.getMail() +"')"; 
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			dbConnect.createStatement().executeUpdate(insert);
+			DbConnect.destroyDbConnect();
 		}
 		catch (SQLException e){
 			e.printStackTrace();
-		}finally{
-			try{
-				returnQuery.close();
-			}catch (SQLException e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}finally{
-				DbConnect.destroyDbConnect();
-				returnQuery = null;
-				query = null;
-			}
-			
 		}
 	}
 	
@@ -211,11 +202,19 @@ public class RequeteBase {
 	 */
 	public static String[] getLesServices(){
 		int i = 0;
-		String[] lesServices = {};
+		String[] lesServices = null;
 		String select = "SELECT * FROM service";
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
+			//Place le pointeur à la fin du tableau
+			returnQuery.last();
+			//on récupère l'indice du dernier element du tableau
+			int row = returnQuery.getRow();
+			//On reviens à l'indice 0
+			returnQuery.beforeFirst();
+			//On initialise le tableau avec le nombre d'elements
+			lesServices = new String[row]; 
 			while(returnQuery.next()){
 				lesServices[i] = returnQuery.getString("libelle_service");
 				i++;
