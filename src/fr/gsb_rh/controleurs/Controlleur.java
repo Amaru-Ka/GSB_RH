@@ -31,12 +31,12 @@ public class Controlleur {
 	}
 	
 	private JPanel[] listerPanels(){
-		JPanel panels[] = {new PanneauAjout(this), new PanneauModifier()};
+		JPanel panels[] = {new JPanel(),new PanneauAjout(this), new PanneauModifier()};
 		return panels;
 	}
 	
 	private String[] listerLibelles(){
-		String libelles[] = {"Ajout","Modification"};
+		String libelles[] = {"Accueil","Ajouter un utilisateur","Modifier un utilisateur"};
 		return libelles;
 	}
 	

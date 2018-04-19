@@ -15,6 +15,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.Spring;
+import javax.swing.SpringLayout;
 import javax.swing.border.Border;
 
 import fr.gsb_rh.controleurs.Controlleur;
@@ -43,10 +45,14 @@ public class PanneauAjout extends JPanel implements ActionListener {
 	public void initComponents(){
 		
 		//Panels et Layout
-		JPanel table = new JPanel(new GridLayout(3,0));
-		JPanel content = new JPanel(new GridLayout(10,0));
+		SpringLayout springLayout = new SpringLayout();
+		JPanel table = new JPanel();
+		JPanel content = new JPanel();
+		JLabel titre = new JLabel("Pour ajouter un nouvel employé, il faut renseigner l'ensemble des champs ci-dessous");
+		content.setLayout(springLayout);
 		JPanel boutons = new JPanel();
 		this.setLayout(new BorderLayout());
+		table.add(titre);
 		this.add(table, BorderLayout.NORTH);
 		this.add(content, BorderLayout.CENTER);
 		this.add(boutons, BorderLayout.SOUTH);
@@ -61,25 +67,75 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		this.telephone = new Champ("N° Téléphone: ");
 		this.email = new Champ("Adresse e-mail: ");
 		//Liste des services
+		JPanel services = new JPanel();
+		JLabel labelService = new JLabel("Service: ");
 		String[] data = this.controleur.listerService();
 		listService = new JComboBox<String>(data);
 		listService.setPreferredSize(new Dimension(150,30));
-		
-		JLabel titre = new JLabel("Ajouter un nouvel employé");
-		//Add dans les différents panneaux.
-		table.add(titre);
-		
-		content.add(this.nom);
-		content.add(this.prenom);
-		content.add(this.dateNaissance);
-		content.add(this.DateEmbauche);
-		content.add(this.adresse);
-		content.add(this.cp);
-		content.add(this.ville);
-		content.add(this.telephone);
-		content.add(this.email);
-		content.add(listService);
-		
+		services.add(labelService);
+		services.add(listService);
+		//Contraintes du SpringLayout
+		SpringLayout.Constraints champNom = new SpringLayout.Constraints();
+		SpringLayout.Constraints champPrenom = new SpringLayout.Constraints();
+		SpringLayout.Constraints champDate = new SpringLayout.Constraints();
+		SpringLayout.Constraints champDateE = new SpringLayout.Constraints();
+		SpringLayout.Constraints champAdr = new SpringLayout.Constraints();
+		SpringLayout.Constraints champCP = new SpringLayout.Constraints();
+		SpringLayout.Constraints champVille = new SpringLayout.Constraints();
+		SpringLayout.Constraints champMail = new SpringLayout.Constraints();
+		SpringLayout.Constraints champTel = new SpringLayout.Constraints();
+		SpringLayout.Constraints champListService = new SpringLayout.Constraints();
+		//nom
+		Spring yPadding = Spring.constant(40);
+		champNom.setX(Spring.constant(179));
+		champNom.setY(yPadding);
+		//prenom
+		yPadding = Spring.constant(80);
+		champPrenom.setX(Spring.constant(160));
+		champPrenom.setY(yPadding);
+	    //date de naissance
+	    yPadding = Spring.constant(120);
+	    champDate.setX(Spring.constant(30));
+	    champDate.setY(yPadding);	
+	    //date embauche
+	    yPadding = Spring.constant(160);
+	    champDateE.setX(Spring.constant(33));
+	    champDateE.setY(yPadding);
+	    //Telephone
+	    yPadding = Spring.constant(200);
+	    champTel.setX(Spring.constant(130));
+	    champTel.setY(yPadding);
+		//Adresse
+	    yPadding = Spring.constant(40);
+	    champAdr.setX(Spring.constant(500));
+	    champAdr.setY(yPadding);
+	    //CP
+	    yPadding = Spring.constant(80);
+	    champCP.setX(Spring.constant(532));
+	    champCP.setY(yPadding);
+	    //Ville
+	    yPadding = Spring.constant(120);
+	    champVille.setX(Spring.constant(525));
+	    champVille.setY(yPadding);
+	    //Mail
+	    yPadding = Spring.constant(160);
+	    champMail.setX(Spring.constant(463));
+	    champMail.setY(yPadding);
+	    //Service
+	    yPadding = Spring.constant(200);
+		champListService.setX(Spring.constant(505));
+		champListService.setY(yPadding);
+	    //Add au panel principal
+		content.add(this.nom,champNom);
+		content.add(this.prenom,champPrenom);
+		content.add(this.dateNaissance,champDate);		
+		content.add(this.DateEmbauche,champDateE);
+		content.add(this.adresse,champAdr);
+		content.add(this.cp,champCP);	
+		content.add(this.ville,champVille);
+		content.add(this.email,champMail);
+		content.add(this.telephone,champTel);
+		content.add(services,champListService);
 		//Boutons 
 		JButton valider = new JButton("Valider");
 		valider.addActionListener(this);

@@ -15,6 +15,7 @@ import javax.swing.SpringLayout;
 import fr.gsb_rh.controleurs.Controlleur;
 
 public class Login extends JFrame implements ActionListener{
+	private static final long serialVersionUID = 8353606416367742496L;
 	protected Controlleur controleur;
 	protected Champ saisieLogin;
 	protected Champ saisieMdp;

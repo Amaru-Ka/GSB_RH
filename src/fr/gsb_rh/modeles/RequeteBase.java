@@ -238,7 +238,7 @@ public class RequeteBase {
 	/**
 	 * Méthode de récupération de tous les utilisateurs de la base de données gsb_appli_frais
 	 * 
-	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et le nom en valeur pour chaque utilisateur
+	 * @return users : ArrayList<Employe> 
 	 */
 	public static ArrayList<Employe> getTousLesUsers(){
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
