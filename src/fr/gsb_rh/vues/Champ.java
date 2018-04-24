@@ -7,6 +7,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class Champ extends JPanel{
+	private static final long serialVersionUID = -5498376968363977941L;
+
 	private JLabel label;
 	private JTextField saisie;
 	private JPasswordField saisieMdp;
@@ -29,6 +31,7 @@ public class Champ extends JPanel{
 	public String getDansSaisie(){
 		return this.saisie.getText();
 	}
+	@SuppressWarnings("deprecation")
 	public String getDansMdp(){
 		return this.saisieMdp.getText();
 	}
@@ -36,4 +39,16 @@ public class Champ extends JPanel{
 	public void effacerSaisie(){
 		this.saisie.setText("");
 	}
+	/**
+	 * Vérifie la valeur du champs
+	 * @return @param flag Vrai si le champs est vide. 
+	 */
+	public Boolean VerifierChamps(){
+		boolean flag;
+		if(this.getDansSaisie().toString().equals(""));
+			flag=true;
+		return flag;
+	}
+
+
 }

@@ -72,6 +72,7 @@ public class Login extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(this.controleur.verifierMdp(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
+//		    this.controleur.setLeRhConnecte(this.controleur.getEmployeConnecte(this.saisieLogin.getDansSaisie()));
 			this.controleur.lancerAppli();
 			this.dispose();
 		}

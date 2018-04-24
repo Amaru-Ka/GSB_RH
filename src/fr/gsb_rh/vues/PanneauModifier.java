@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class PanneauModifier extends JPanel implements ActionListener {
+	private static final long serialVersionUID = 7727171796297732201L;
 	private Champ id; 
 	private Champ nom; 
 	private Champ prenom; 

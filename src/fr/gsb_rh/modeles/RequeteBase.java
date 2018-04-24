@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 
 /**
@@ -36,8 +35,7 @@ public class RequeteBase {
 	public static boolean estConnecte(String login , String mdp ){
 		boolean flag = false;
 		returnQuery = null; 
-		String select = "SELECT login, mdp "
-				+ "FROM visiteur WHERE login='"+login+"' AND mdp='"+mdp+"' AND id_service = 3";
+		String select = "SELECT login,mdp FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"' AND id_service = 3";
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
@@ -58,13 +56,17 @@ public class RequeteBase {
 			}	
 		return flag;	
 		}
+	
+	
+
+	
 	/**
 	 * Methode retournant l'id d'un utilisateur par rapport à son login
 	 * 
 	 * @param login String : Le login de l'utilisateur voulant se connecter
 	 * @return id String : Son identifiant unique
 	 */
-	public static Employe getIdConnecte(String login){
+	public static Employe getEmployeConnecte(String login){
 		String select = "SELECT id,nom,prenom,id_service FROM visiteur WHERE login="+login+"";
 		Employe unEmploye = null;
 		try{

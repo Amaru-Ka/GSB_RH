@@ -3,10 +3,10 @@ package fr.gsb_rh.vues;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
 
 public class FenetreAppli extends JFrame {
-	
+	private static final long serialVersionUID = -401177106913820997L;
+
 	public FenetreAppli(){
 		//Définir un titre pour la fenêtre.
 		this.setTitle("Application GSB des Ressources Humaines ");

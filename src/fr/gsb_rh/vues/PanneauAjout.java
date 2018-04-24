@@ -2,28 +2,23 @@ package fr.gsb_rh.vues;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JList;
-import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
-import javax.swing.border.Border;
 
 import fr.gsb_rh.controleurs.Controlleur;
-import fr.gsb_rh.modeles.Employe;
+
 
 public class PanneauAjout extends JPanel implements ActionListener {
-
+	private static final long serialVersionUID = -7224798746581420809L;
 	protected Controlleur controleur = null;
 	
 	private Champ nom; 
@@ -35,8 +30,8 @@ public class PanneauAjout extends JPanel implements ActionListener {
 	private Champ ville;
 	private Champ telephone;
 	private Champ email;
-	private String idService;
 	private JComboBox<String> listService;
+	ArrayList<Champ> lesChamps = new ArrayList<Champ>();
 	public PanneauAjout(Controlleur Controlleur){
 		super();
 		this.controleur = Controlleur;
@@ -66,9 +61,11 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		this.ville = new Champ("Ville: ");
 		this.telephone = new Champ("N° Téléphone: ");
 		this.email = new Champ("Adresse e-mail: ");
+		
 		//Liste des services
 		JPanel services = new JPanel();
 		JLabel labelService = new JLabel("Service: ");
+		//Recup des data services
 		String[] data = this.controleur.listerService();
 		listService = new JComboBox<String>(data);
 		listService.setPreferredSize(new Dimension(150,30));
@@ -143,7 +140,6 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		annuler.addActionListener(this);
 		boutons.add(valider);
 		boutons.add(annuler);
-		
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -159,18 +155,29 @@ public class PanneauAjout extends JPanel implements ActionListener {
 			this.ville.effacerSaisie();
 			this.telephone.effacerSaisie();
 			this.email.effacerSaisie();			
-		}else{
-			this.controleur.creerEmploye(this.nom.getDansSaisie(),
-					this.prenom.getDansSaisie(),
-					this.controleur.formatterDate(this.dateNaissance.getDansSaisie()),
-					this.adresse.getDansSaisie(),
-					this.cp.getDansSaisie(),
-					this.ville.getDansSaisie(),
-					this.telephone.getDansSaisie(),
-					this.email.getDansSaisie(),
-					this.controleur.formatterDate(this.DateEmbauche.getDansSaisie()),
-					this.listService.getSelectedIndex()+1);
-
+			
+		}else{				
+			if (this.nom.VerifierChamps() && this.prenom.VerifierChamps() && this.dateNaissance.VerifierChamps() &&
+				this.email.VerifierChamps() && this.adresse.VerifierChamps() && this.cp.VerifierChamps() &&
+				this.ville.VerifierChamps() && this.DateEmbauche.VerifierChamps() && this.telephone.VerifierChamps())
+					JOptionPane.showMessageDialog(null, "Attention certains champs sont vides !",null,JOptionPane.ERROR_MESSAGE);
+			else{
+				this.controleur.creerEmploye(
+												this.nom.getDansSaisie(),
+												this.prenom.getDansSaisie(),
+												this.controleur.formatterDate(this.dateNaissance.getDansSaisie()),
+												this.adresse.getDansSaisie(),
+												this.cp.getDansSaisie(),
+												this.ville.getDansSaisie(),
+												this.telephone.getDansSaisie(),
+												this.email.getDansSaisie(),
+												this.controleur.formatterDate(this.DateEmbauche.getDansSaisie()),
+												this.listService.getSelectedIndex()+1);
+				
+				JOptionPane.showMessageDialog(null,"L'utilisateur a bien été enregistré",null, JOptionPane.INFORMATION_MESSAGE);
+				
+			}
+			
 		}
 	}
 

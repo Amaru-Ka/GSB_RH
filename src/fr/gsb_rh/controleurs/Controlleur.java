@@ -1,27 +1,31 @@
 package fr.gsb_rh.controleurs;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
-
-import javax.swing.JComboBox;
-import javax.swing.JList;
 import javax.swing.JPanel;
-
 import fr.gsb_rh.modeles.Employe;
 import fr.gsb_rh.modeles.RequeteBase;
 import fr.gsb_rh.vues.FenetreAppli;
 import fr.gsb_rh.vues.Login;
+//import fr.gsb_rh.vues.PanneauAccueil;
 import fr.gsb_rh.vues.PanneauAjout;
 import fr.gsb_rh.vues.PanneauModifier;
-
+/**
+ * 
+ * @author adminlocal
+ *
+ */
 public class Controlleur {
+	private Employe leRhConnecte;
 	
 	public Controlleur(){
 		
 	}
+	
 	public void demanderLogin(){
 		Login Login = new Login(this);
 		Login.setVisible(true);
+	}
+	
+	public Employe getEmployeConnecte(String login){
+		return RequeteBase.getEmployeConnecte(login);
 	}
 	
 	public void lancerAppli(){
@@ -29,21 +33,29 @@ public class Controlleur {
 		appliRH.AjoutOnglets(this.listerLibelles(), this.listerPanels());
 		appliRH.setVisible(true);
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	private JPanel[] listerPanels(){
 		JPanel panels[] = {new JPanel(),new PanneauAjout(this), new PanneauModifier()};
 		return panels;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	private String[] listerLibelles(){
 		String libelles[] = {"Accueil","Ajouter un utilisateur","Modifier un utilisateur"};
 		return libelles;
 	}
-	
 	public boolean verifierMdp(String log, String mdp){
 		return RequeteBase.estConnecte(log, mdp);
 	}
-	
+	/**
+	 * 
+	 * @param employe
+	 */
 	public void ajouterEmploye(Employe employe){
 		RequeteBase.AjoutEmploye(employe);
 	}
@@ -72,6 +84,12 @@ public class Controlleur {
 	public String formatterDate(String date){
 		String modifDate = date.substring(4, 8) +"-"+ date.substring(2,4) +"-"+ date.substring(0,2);
 		return modifDate;
+	}
+	public Employe getLeRhConnecte() {
+		return leRhConnecte;
+	}
+	public void setLeRhConnecte(Employe leRhConnecte) {
+		this.leRhConnecte = leRhConnecte;
 	}
 	
 }
