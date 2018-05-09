@@ -2,46 +2,28 @@ package fr.gsb_rh.vues;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JList;
-import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
-import javax.swing.border.Border;
 
 import fr.gsb_rh.controleurs.Controlleur;
-import fr.gsb_rh.modeles.Employe;
 
-public class PanneauAjout extends JPanel implements ActionListener {
 
-	protected Controlleur controleur = null;
-	
-	private Champ nom; 
-	private Champ prenom; 
-	private Champ dateNaissance;
-	private Champ DateEmbauche;
-	private Champ adresse;
-	private Champ cp;
-	private Champ ville;
-	private Champ telephone;
-	private Champ email;
-	private String idService;
-	private JComboBox<String> listService;
+public class PanneauAjout extends Panneaux implements ActionListener {
+	private static final long serialVersionUID = -7224798746581420809L;
+	protected Controlleur controleur = null;	
 	public PanneauAjout(Controlleur Controlleur){
 		super();
 		this.controleur = Controlleur;
 		this.initComponents();
 	}
+	
 	public void initComponents(){
 		
 		//Panels et Layout
@@ -56,17 +38,19 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		this.add(table, BorderLayout.NORTH);
 		this.add(content, BorderLayout.CENTER);
 		this.add(boutons, BorderLayout.SOUTH);
+		
 		//Champs
-		this.nom = new Champ("Nom: ");
-		this.prenom = new Champ("Prénom: ");
-		this.dateNaissance = new Champ("Date de naissance(JJMMAAAA):");
-		this.DateEmbauche = new Champ("Date d'embauche(JJMMAAAA): ");
-		this.adresse = new Champ("Adresse: ");
-		this.cp = new Champ("CP: ");
-		this.ville = new Champ("Ville: ");
-		this.telephone = new Champ("N° Téléphone: ");
-		this.email = new Champ("Adresse e-mail: ");
-		//Liste des services
+		this.nom = new Champ("Nom(*): ");
+		this.prenom = new Champ("Prénom(*): ");
+		this.dateEmbauche = new Champ("Date d'embauche(JJMMAAAA)(*): ");
+		this.adresse = new Champ("Adresse(*): ");
+		this.cp = new Champ("CP(*): ");
+		this.ville = new Champ("Ville(*): ");
+		this.telephone = new Champ("N° Téléphone(*): ");
+		this.email = new Champ("Adresse e-mail(*): ");
+		
+		//Liste des services. Ajout d'un panel, pour puvoir lettre le JcomboBox qui fait appelle au Data 
+		// permettant l'affichage des différents services.
 		JPanel services = new JPanel();
 		JLabel labelService = new JLabel("Service: ");
 		String[] data = this.controleur.listerService();
@@ -74,10 +58,11 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		listService.setPreferredSize(new Dimension(150,30));
 		services.add(labelService);
 		services.add(listService);
+		
+		
 		//Contraintes du SpringLayout
 		SpringLayout.Constraints champNom = new SpringLayout.Constraints();
 		SpringLayout.Constraints champPrenom = new SpringLayout.Constraints();
-		SpringLayout.Constraints champDate = new SpringLayout.Constraints();
 		SpringLayout.Constraints champDateE = new SpringLayout.Constraints();
 		SpringLayout.Constraints champAdr = new SpringLayout.Constraints();
 		SpringLayout.Constraints champCP = new SpringLayout.Constraints();
@@ -93,10 +78,6 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		yPadding = Spring.constant(80);
 		champPrenom.setX(Spring.constant(160));
 		champPrenom.setY(yPadding);
-	    //date de naissance
-	    yPadding = Spring.constant(120);
-	    champDate.setX(Spring.constant(30));
-	    champDate.setY(yPadding);	
 	    //date embauche
 	    yPadding = Spring.constant(160);
 	    champDateE.setX(Spring.constant(33));
@@ -127,9 +108,8 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		champListService.setY(yPadding);
 	    //Add au panel principal
 		content.add(this.nom,champNom);
-		content.add(this.prenom,champPrenom);
-		content.add(this.dateNaissance,champDate);		
-		content.add(this.DateEmbauche,champDateE);
+		content.add(this.prenom,champPrenom);	
+		content.add(this.dateEmbauche,champDateE);
 		content.add(this.adresse,champAdr);
 		content.add(this.cp,champCP);	
 		content.add(this.ville,champVille);
@@ -150,27 +130,26 @@ public class PanneauAjout extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		String action = arg0.getActionCommand();
 		if(action.equals("Annuler")){
-			this.nom.effacerSaisie();
-			this.prenom.effacerSaisie();
-			this.dateNaissance.effacerSaisie();
-			this.DateEmbauche.effacerSaisie();
-			this.adresse.effacerSaisie();
-			this.cp.effacerSaisie();
-			this.ville.effacerSaisie();
-			this.telephone.effacerSaisie();
-			this.email.effacerSaisie();			
+			this.effacerChampSaisie();	
 		}else{
-			this.controleur.creerEmploye(this.nom.getDansSaisie(),
-					this.prenom.getDansSaisie(),
-					this.controleur.formatterDate(this.dateNaissance.getDansSaisie()),
-					this.adresse.getDansSaisie(),
-					this.cp.getDansSaisie(),
-					this.ville.getDansSaisie(),
-					this.telephone.getDansSaisie(),
-					this.email.getDansSaisie(),
-					this.controleur.formatterDate(this.DateEmbauche.getDansSaisie()),
-					this.listService.getSelectedIndex()+1);
-
+			//verification si les champs sont vides avant l'envoie de la requête.
+			// Si un champ est vide alors on génère un message d'erreur. 
+			if (this.verifSaisie()){
+					JOptionPane.showMessageDialog(null, "Attention certains champs sont vides !",null,JOptionPane.ERROR_MESSAGE);
+				}
+			else {
+					this.controleur.creerEmploye(this.nom.getDansSaisie(),
+												 this.prenom.getDansSaisie(),
+												 this.adresse.getDansSaisie(),
+												 this.cp.getDansSaisie(),
+												 this.ville.getDansSaisie(),
+												 this.telephone.getDansSaisie(),
+												 this.email.getDansSaisie(),
+												 this.controleur.formatterDate(this.dateEmbauche.getDansSaisie()),
+												 this.listService.getSelectedIndex()+1); 
+					JOptionPane.showMessageDialog(null, "Les données de l'employé son sauvées en base",null,JOptionPane.INFORMATION_MESSAGE);
+					this.effacerChampSaisie();
+			}
 		}
 	}
 

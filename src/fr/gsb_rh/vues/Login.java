@@ -72,9 +72,11 @@ public class Login extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(this.controleur.verifierMdp(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
-			this.controleur.lancerAppli();
-			this.dispose();
-		}
-		else JOptionPane.showMessageDialog(null,"Login et/ou mot de passe erroné","Valider",JOptionPane.ERROR_MESSAGE);				
+			if(this.controleur.verifierDroits(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
+				this.controleur.lancerAppli();
+				this.dispose();
+			}else JOptionPane.showMessageDialog(null,"Vous n'avez pas les droits requis pour accéder à cette application","Valider",JOptionPane.ERROR_MESSAGE);
+			
+		}else JOptionPane.showMessageDialog(null,"Login et/ou mot de passe erroné","Valider",JOptionPane.ERROR_MESSAGE);				
 	}
 }

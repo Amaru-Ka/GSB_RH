@@ -11,7 +11,7 @@ public class FenetreAppli extends JFrame {
 		//Définir un titre pour la fenêtre.
 		this.setTitle("Application GSB des Ressources Humaines ");
 		//Définir la taille de la fenêtre.
-	    this.setSize(900, 500);
+	    this.setSize(1000, 600);
 	    //La fenêtre peut  être redimensionnée.
 	    this.setResizable(true);
 	    // Centrer la fenêtre.

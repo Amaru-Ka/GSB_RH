@@ -19,7 +19,16 @@ public class Employe {
 	private String Mail; 
 	private String login; 
 	private String mdp; 
+	private String libelleService;
 	
+	public String getLibelleService() {
+		return libelleService;
+	}
+	
+	public void setLibelleService(String libelleService) {
+		this.libelleService = libelleService;
+	}
+
 	private int idService;
 	/**
 	 * Constructeur par défaut d'Employe
@@ -27,6 +36,14 @@ public class Employe {
 	public Employe(){
 		
 	}
+	
+	public Employe(String idUser, String nomUser, String prenomUser, String nomService){
+		this.setId(idUser);
+		this.setNom(nomUser);
+		this.setPrenom(prenomUser);
+		this.setLibelleService(nomService);
+	}
+	
 	/**
 	 * Constructeur surchargé d'Employe == Connaitre l'Employe qui procède à des modifications / Récupérer une liste d'employés
 	 * 
@@ -34,6 +51,7 @@ public class Employe {
 	 * @param nomUser
 	 * @param prenomUser
 	 * @param idServiceUser
+	 * 
 	 */
 	public Employe(String idUser, String nomUser, String prenomUser, int idServiceUser){
 		this.setId(idUser);
@@ -54,7 +72,7 @@ public class Employe {
 	 * @param dateEmbauche
 	 */
 	
-	public Employe(String nomUser, String prenomUser,String dateNaissance, String adresseUser, String CPUser, String villeUser, String telephone,String mail, String dateEmbaucheUser,int idService){
+	public Employe(String nomUser, String prenomUser, String adresseUser, String CPUser, String villeUser, String telephone,String mail, String dateEmbaucheUser,int idService){
 		this.setNom(nomUser);
 		this.setPrenom(prenomUser);
 		this.setAdresse(adresseUser);
@@ -63,13 +81,29 @@ public class Employe {
 		this.setMail(mail);
 		this.setTelephone(telephone);
 		this.setDateEmbauche(dateEmbaucheUser);
-		this.setDateNaissance(dateNaissance);
 		this.setLogin();
 		this.setIdService(idService);
 		
 		//Setter qui génèrent aléatoirement un id ou un mot de passe 
 		this.setMdp();
 		this.setId();
+	}
+	
+	
+	public Employe(String Id, String nomUser,String prenomUser, String Login, String Mdp, String adresseUser, String CPUser, String villeUser,String dateEmbaucheUser, String telephone,String mail, int idService){
+		
+		this.setId(Id);
+		this.setNom(nomUser);
+		this.setPrenom(prenomUser);
+		this.setAdresse(adresseUser);
+		this.setCP(CPUser);
+		this.setVille(villeUser);
+		this.setMail(mail);
+		this.setTelephone(telephone);
+		this.setDateEmbauche(dateEmbaucheUser);
+		this.setLogin(Login);
+		this.setMdp(Mdp);
+		this.setIdService(idService);	
 	}
 	/**
 	 * GETTERS ET SETTERS D'EMPLOYE
@@ -80,6 +114,7 @@ public class Employe {
 	public void setId(){
 		this.id = this.genererString(3);
 	}
+	
 	//setter surchargé lors de la récupération des employés en base
 	public void setId(String id){
 		this.id = id;
@@ -99,11 +134,20 @@ public class Employe {
 		this.dateDepart = date;
 	}
 	
+	public void setMdp(String mdp){
+		this.mdp = mdp;
+	}
+	
+	public void setLogin(String login){
+		this.login=login;
+	}
+	
 	public String getlogin() {
 		return login;
 	}
+	
 	public void setLogin(){
-		this.login = this.prenom.substring(0,1) + " " + this.nom;
+		this.login = this.prenom.substring(0,1) + "" + this.nom;
 	}
 	
 	public String getMdp() {
@@ -121,6 +165,7 @@ public class Employe {
 	}
 	
 	public String getPrenom() {
+		
 		return prenom;
 	}
 	public void setPrenom(String prenom) {
@@ -183,11 +228,10 @@ public class Employe {
 	 * @return String : Contient un mot de passe aléatoire sur X caractères allant de a-z A-Z 0-9
 	 */
 	public String genererString(int x){
-		int lower = 0; 
-		int higher = 62; 
 		String password = "";
 		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		
+		int higher = chars.length()-1; 
+		int lower = 0; 
 		for(int i = 0 ; i < x ; i++){
 			int y = (int)(Math.random() * (higher + 1 - lower)) + lower;
 			password += chars.charAt(y);
