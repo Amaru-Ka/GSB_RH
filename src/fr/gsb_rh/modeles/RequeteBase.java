@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
+import javax.swing.JOptionPane;
 
 /**
  * Classe de manipulation des données que contient la bdd gsb_appli_frais
@@ -15,15 +15,14 @@ import java.util.ArrayList;
  * 
  */
 public class RequeteBase {
+	
 	private static Statement query;
 	private static ResultSet returnQuery; 
 	
 	/**
-	 * Constructeur par défaut de l'objet QueryObject
-	 */
-	public RequeteBase(){
-		
-	}
+	* Constructeur par défaut de l'objet QueryObject
+	*/
+	public RequeteBase(){}
 	
 	/**
 	 * Méthode de test de connexion 
@@ -31,16 +30,17 @@ public class RequeteBase {
 	 * @param login String : Le login d'un RH qui veut se connecter 
 	 * @param mdp String : Son mot de passe
 	 * @return flag boolean : vrai si ses login/mdp correspondent et qu'il est du bon service, false sinon.
+	 * String idUser, String nomUser, String prenomUser, int idServiceUser
 	 */
 	public static boolean estConnecte(String login , String mdp ){
 		boolean flag = false;
 		returnQuery = null; 
-		String select = "SELECT login,mdp FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"' AND id_service = 3";
+		String select = "SELECT id,nom,prenom,id_service,login,mdp FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"'";
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
 			if(returnQuery.first())
-				flag = true;	
+				flag = true;			
 		}
 		catch (SQLException e){
 			e.printStackTrace();
@@ -55,11 +55,32 @@ public class RequeteBase {
 				}
 			}	
 		return flag;	
+	}
+	public static boolean verifDroits(String login , String mdp){
+		boolean flag = false;
+		returnQuery = null; 
+		String select = "SELECT login,mdp FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"' AND id_service = 3";
+		try{
+			Connection dbConnect = DbConnect.getDbConnect();
+			returnQuery = dbConnect.createStatement().executeQuery(select);
+			if(returnQuery.first())
+				flag = true;
 		}
-	
-	
-
-	
+		catch (SQLException e){
+			e.printStackTrace();
+		}finally{
+				try{
+					returnQuery.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}finally{
+					DbConnect.destroyDbConnect();
+					returnQuery = null;
+				}
+			}	
+		return flag;	
+	}
+		
 	/**
 	 * Methode retournant l'id d'un utilisateur par rapport à son login
 	 * 
@@ -85,8 +106,7 @@ public class RequeteBase {
 			}finally{
 				DbConnect.destroyDbConnect();
 				returnQuery = null;
-			}
-			
+			}		
 		}
 		return unEmploye;
 	}
@@ -122,28 +142,29 @@ public class RequeteBase {
 		}
 	}
 	
-	/**
-	 * Méthode de modification d'un utilisateur. 
-	 * Il faut renseigner toutes les informations personnelles de l'utilisateur afin qu'elles puissent être modifiés en base.
-	 * 
-	 * @param unEmploye
-	 */
-	public static void modifierEmploye(Employe unEmploye){
-		String update = "UPDATE "
-				+ "`visiteur`(`nom`, `prenom`, `login`, `adresse`, `cp`, `ville`, `dateEmbauche`,`id_service`) "
-				+ "SET(`nom`=      '"+ unEmploye.getNom() +"',"
-				+ "`prenom`=       '"+ unEmploye.getPrenom() +"',"
-				+ "`login`=        '"+ unEmploye.getlogin() +"',"
-				+ "`adresse`=      '"+ unEmploye.getAdresse() +"',"
-				+ "`cp`=           '"+ unEmploye.getCP() +"',"
-				+ "`ville`=        '"+ unEmploye.getVille() +"',"
-				+ "`dateEmbauche`= '"+ unEmploye.getDateEmbauche() +"',"
-				+ "`id_service`=   '"+ unEmploye.getIdService() +"')"; 		
+	
+	public static Employe unEmploye (String nom, String prenom)
+	{
+		Employe UnEmploye = null;
 		try{
-			Connection dbConnect = DbConnect.getDbConnect();
-			dbConnect.createStatement().executeUpdate(update);
-		}
-		catch (SQLException e){
+			String select = "SELECT * FROM visiteur WHERE nom='"+nom+"' and prenom='"+prenom+"'"; 
+			query = DbConnect.getDbConnect().createStatement();
+			returnQuery = query.executeQuery(select);
+			returnQuery.first();
+				UnEmploye = new Employe(returnQuery.getString("id"),
+						returnQuery.getString("nom"),
+						returnQuery.getString("prenom"),
+						returnQuery.getString("login"),
+						returnQuery.getString("Mdp"),
+						returnQuery.getString("Adresse"),
+						returnQuery.getString("CP"),
+						returnQuery.getString("Ville"),
+						returnQuery.getString("DateEmbauche"),
+						returnQuery.getString("Telephone"),
+						returnQuery.getString("email"),
+						returnQuery.getInt("id_service"));
+			
+		}catch(SQLException e){
 			e.printStackTrace();
 		}finally{
 			try{
@@ -159,6 +180,50 @@ public class RequeteBase {
 			}
 			
 		}
+		return UnEmploye;
+		
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * Méthode de modification d'un utilisateur. 
+	 * Il faut renseigner toutes les informations personnelles de l'utilisateur afin qu'elles puissent être modifiés en base.
+	 * 
+	 * @param unEmploye
+	 */
+	public static void modifierEmploye(Employe unEmploye){
+		String update = "UPDATE "
+				+ "`visiteur`"
+				+ "SET `id`='"+ unEmploye.getId() +"',"
+				+ "`nom`='"+ unEmploye.getNom() +"',"
+				+ "`prenom`='"+ unEmploye.getPrenom() +"',"
+				+ "`login`='"+ unEmploye.getlogin() +"',"
+				+ "`mdp`='"+ unEmploye.getMdp() +"',"
+				+ "`adresse`='"+ unEmploye.getAdresse() +"',"
+				+ "`cp`='"+ unEmploye.getCP() +"',"
+				+ "`ville`='"+ unEmploye.getVille() +"',"
+				+ "`dateEmbauche`='"+ unEmploye.getDateEmbauche() +"',"
+				+ "`dateDepart`= NULL,"
+				+ "`id_service`='"+ unEmploye.getIdService() +"',"
+				+ "`telephone`='"+ unEmploye.getTelephone() +"',"
+				+ "`email`='"+ unEmploye.getMail() +"'"
+				+ "Where id='"+ unEmploye.getId() +"'";		
+		try{
+			Connection dbConnect = DbConnect.getDbConnect();
+			dbConnect.createStatement().executeUpdate(update);
+		}
+		catch (SQLException e){
+			JOptionPane.showMessageDialog(null,"Veuillez vérifier l'ensemble des champs saisie puis réessayez.\n Si le problème persiste veuillez contacter votre administrateur systèmes","Valider",JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}finally{
+				DbConnect.destroyDbConnect();
+				returnQuery = null;
+				query = null;
+			}
 	}
 	
 	/**
@@ -198,7 +263,7 @@ public class RequeteBase {
 	}
 	
 	/**
-	 * Méthode permettant de récupérer l'ensemeble des id et nom des services
+	 * Méthode permettant de récupérer l'ensemble des id et nom des services
 	 * 
 	 * @return lesServices Hashtable<Integer,String> : Dictionnaire contenant les services
 	 */
@@ -237,6 +302,10 @@ public class RequeteBase {
 		return lesServices;
 	}
 	
+	
+	
+	
+	
 	/**
 	 * Méthode de récupération de tous les utilisateurs de la base de données gsb_appli_frais
 	 * 
@@ -246,11 +315,11 @@ public class RequeteBase {
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
 		Employe unEmploye = null;
 		try{
-			String select = "SELECT * FROM visiteur"; 
+			String select = "SELECT id, nom, prenom, libelle_service FROM visiteur NATURAL JOIN service"; 
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			while(returnQuery.next()){
-				unEmploye = new Employe(returnQuery.getString("id"),returnQuery.getString("nom"),returnQuery.getString("prenom"),returnQuery.getInt("id_service"));
+				unEmploye = new Employe(returnQuery.getString("id"),returnQuery.getString("nom"),returnQuery.getString("prenom"),returnQuery.getString("libelle_service"));
 				lesEmployes.add(unEmploye);
 			}				
 		}catch(SQLException e){
@@ -269,6 +338,38 @@ public class RequeteBase {
 			}
 			
 		}
+		return lesEmployes;
+	}
+	
+	/**
+	 * Méthode de récupération de tous les utilisateurs
+	 * @return lesEmployés 
+	 */
+	public static ArrayList<String> listerEmployes(){
+		ArrayList<String> lesEmployes = new ArrayList<String>();
+		Statement requete = null;
+		ResultSet lecture = null;
+		
+		try {
+			requete = DbConnect.getDbConnect().createStatement();
+			String sql = "SELECT id, nom, prenom FROM visiteur;";
+			lecture = requete.executeQuery(sql);
+			
+			if(lecture != null)
+			{
+				while(lecture.next()){
+					lesEmployes.add(lecture.getString("id") + " " + lecture.getString("nom") + " " + lecture.getString("prenom"));
+				}
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "impossible de lister les employés");
+			//e.printStackTrace();
+		}finally{
+			DbConnect.destroyDbConnect();
+		}
+		
 		return lesEmployes;
 	}
 	
