@@ -15,6 +15,18 @@ public class ChoixEmploye extends JPanel {
 	private JLabel label;
 	private JComboBox<String> choix;
 	
+	/**
+	 * Constructeur par défaut
+	 */
+	public ChoixEmploye(){
+		
+	}
+	
+	/**
+	 * Constructeur surchargé qui construit la liste déroulante d'employé
+	 * @param label : String
+	 * @param lesChoix : ArrayList<Employe>
+	 */
 	public ChoixEmploye(String label, ArrayList<Employe> lesChoix) {
 		this.label = new JLabel(label);
 		this.choix = new JComboBox<String>();
@@ -27,7 +39,12 @@ public class ChoixEmploye extends JPanel {
 		this.add(this.label);
 		this.add(this.choix);
 	}
-	//Surcharge pour lister les services
+	
+	/**
+	 * Constructeur surchargé qui construit la liste des services 
+	 * @param label : String
+	 * @param data : String[]
+	 */
 	public ChoixEmploye(String label, String[] data) {
 		this.label = new JLabel(label);
 		this.choix = new JComboBox<String>();
@@ -37,19 +54,28 @@ public class ChoixEmploye extends JPanel {
 		this.add(this.label);
 		this.add(this.choix);
 	}
-	public String getSelection(){
-		return (String)this.choix.getSelectedItem();
-	}
+	
 	public JComboBox<String> getComboBox(){
 		return this.choix;
 	}
+	
+	/**
+	 * Méthode qui retourne l'élément selectionné par l'utilisateur
+	 * @return (String)this.choix.getSelectedItem() : String
+	 */
+	public String getSelection(){
+		return (String)this.choix.getSelectedItem();
+	}
+	
+	/**
+	 * Méthode qui met à jour la liste d'employé 
+	 * @param lesChoix : ArrayList<Employe> 
+	 */
 	public void majList(ArrayList<Employe> lesChoix){
 		this.choix.removeAllItems();
 		this.choix = this.getComboBox();
 		for(Employe unChoix : lesChoix)
-			this.choix.addItem(unChoix.getId() + unChoix.getNom() + unChoix.getPrenom());
+			this.choix.addItem(unChoix.getId()+" "+ unChoix.getNom()+" "+ unChoix.getPrenom());
 	}
 
-	
-	
 }

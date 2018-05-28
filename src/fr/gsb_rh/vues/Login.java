@@ -14,6 +14,12 @@ import javax.swing.SpringLayout;
 
 import fr.gsb_rh.controleurs.Controlleur;
 
+/**
+ * Classe graphique d'affichage de l'écran de connexion
+ * @author antoine & audrey
+ * @see Controlleur.java
+ * @version 1.0
+ */
 public class Login extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 8353606416367742496L;
 	protected Controlleur controleur;
@@ -21,6 +27,10 @@ public class Login extends JFrame implements ActionListener{
 	protected Champ saisieMdp;
 	protected JButton boutonValider;
 	
+	/**
+	 * Constructeur surchargé qui prend en paramètre un objet Controlleur 
+	 * @param controleur : Controlleur
+	 */
 	public Login(Controlleur controleur){
 		super();
 		this.controleur = controleur;
@@ -35,6 +45,10 @@ public class Login extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	}
+	
+	/**
+	 * Méthode d'initialisation des éléments de la fenêtre
+	 */
 	public void initComponents(){
 		//Instance du panneau et du layout
 		JPanel panelLogin = new JPanel();
@@ -68,11 +82,15 @@ public class Login extends JFrame implements ActionListener{
 		//Ajout du panel à la fenetre
 		this.add(panelLogin);
 	}
-	
+
+	/**
+	 * Méthode d'écoute du bouton valider
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(this.controleur.verifierMdp(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
 			if(this.controleur.verifierDroits(this.saisieLogin.getDansSaisie(),this.saisieMdp.getDansMdp())){
+				this.controleur.setLeRhConnecte(this.controleur.getEmployeConnecte(this.saisieLogin.getDansSaisie()));
 				this.controleur.lancerAppli();
 				this.dispose();
 			}else JOptionPane.showMessageDialog(null,"Vous n'avez pas les droits requis pour accéder à cette application","Valider",JOptionPane.ERROR_MESSAGE);

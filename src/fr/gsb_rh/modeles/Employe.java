@@ -1,9 +1,11 @@
 package fr.gsb_rh.modeles;
 
 /**
- * 
- * @author 
- *
+ * Classe metier servant à manipuler les données des utilisateurs identifiés dans le SI de GSB
+ * @author antoine & audrey
+ * @see Controlleur.java
+ * @see RequeteteBase.java
+ * @version 1.0
  */
 public class Employe {
 	private String id; 
@@ -20,23 +22,22 @@ public class Employe {
 	private String login; 
 	private String mdp; 
 	private String libelleService;
-	
-	public String getLibelleService() {
-		return libelleService;
-	}
-	
-	public void setLibelleService(String libelleService) {
-		this.libelleService = libelleService;
-	}
-
 	private int idService;
+///////////////////CONSTRUCTEURS///////////////////////////
 	/**
 	 * Constructeur par défaut d'Employe
 	 */
 	public Employe(){
 		
 	}
-	
+		
+	/**
+	 * Constructeur surchargé d'Employe == Connaitre l'Employe qui procède à des modifications / Récupérer une liste d'employés
+	 * @param idUser : String
+	 * @param nomUser : String
+	 * @param prenomUser : String
+	 * @param idServiceUser : String
+	 */
 	public Employe(String idUser, String nomUser, String prenomUser, String nomService){
 		this.setId(idUser);
 		this.setNom(nomUser);
@@ -44,14 +45,13 @@ public class Employe {
 		this.setLibelleService(nomService);
 	}
 	
+	
 	/**
 	 * Constructeur surchargé d'Employe == Connaitre l'Employe qui procède à des modifications / Récupérer une liste d'employés
-	 * 
-	 * @param idUser
-	 * @param nomUser
-	 * @param prenomUser
-	 * @param idServiceUser
-	 * 
+	 * @param idUser  : String
+	 * @param nomUser : String
+	 * @param prenomUser : String
+	 * @param idServiceUser : int
 	 */
 	public Employe(String idUser, String nomUser, String prenomUser, int idServiceUser){
 		this.setId(idUser);
@@ -71,7 +71,6 @@ public class Employe {
 	 * @param ville
 	 * @param dateEmbauche
 	 */
-	
 	public Employe(String nomUser, String prenomUser, String adresseUser, String CPUser, String villeUser, String telephone,String mail, String dateEmbaucheUser,int idService){
 		this.setNom(nomUser);
 		this.setPrenom(prenomUser);
@@ -89,7 +88,21 @@ public class Employe {
 		this.setId();
 	}
 	
-	
+	/**
+	 * Constructeur surchargé d'Employe == modification d'un Employe dans la base
+	 * @param Id : String 
+	 * @param nomUser : String
+	 * @param prenomUser : String
+	 * @param Login : String
+	 * @param Mdp : String
+	 * @param adresseUser : String
+	 * @param CPUser : String
+	 * @param villeUser : String
+	 * @param dateEmbaucheUser : String
+	 * @param telephone : String
+	 * @param mail : String
+	 * @param idService : int
+	 */
 	public Employe(String Id, String nomUser,String prenomUser, String Login, String Mdp, String adresseUser, String CPUser, String villeUser,String dateEmbaucheUser, String telephone,String mail, int idService){
 		
 		this.setId(Id);
@@ -105,17 +118,28 @@ public class Employe {
 		this.setMdp(Mdp);
 		this.setIdService(idService);	
 	}
-	/**
-	 * GETTERS ET SETTERS D'EMPLOYE
-	 */
+	
+///////////////////GETTERS & SETTERS///////////////////////
+	public String getLibelleService() {
+		return libelleService;
+	}
+	
+	public void setLibelleService(String libelleService) {
+		this.libelleService = libelleService;
+	}
+
 	public String getId(){
 		return id;
 	}
+	
+	/**
+	 * Setter qui génere automatiquement un id 
+	 */
 	public void setId(){
-		this.id = this.genererString(3);
+		this.id = this.genererId();
 	}
 	
-	//setter surchargé lors de la récupération des employés en base
+	//setter surchargé lors de la modification des employés en base
 	public void setId(String id){
 		this.id = id;
 	}
@@ -134,9 +158,6 @@ public class Employe {
 		this.dateDepart = date;
 	}
 	
-	public void setMdp(String mdp){
-		this.mdp = mdp;
-	}
 	
 	public void setLogin(String login){
 		this.login=login;
@@ -155,6 +176,9 @@ public class Employe {
 	}
 	public void setMdp(){
 		this.mdp = this.genererString(8);
+	}
+	public void setMdp(String mdp){
+		this.mdp = mdp;
 	}
 	
 	public String getNom() {
@@ -221,21 +245,50 @@ public class Employe {
 		this.idService = idService;
 	}
 	
+///////////////////METHODES DE CLASSE//////////////////////
+	
 	/**
-	 * Fonction de génération de mot de passe afin de créer un mdp ou un identifiant aléatoire à la création de chaque utilisateur.
+	 * Methode de génération de chaine de caractères aléatoire.
 	 * 
-	 * @param int : Le nombre de caractères souhaité
-	 * @return String : Contient un mot de passe aléatoire sur X caractères allant de a-z A-Z 0-9
+	 * @param x : int
+	 * @return string : String
 	 */
 	public String genererString(int x){
-		String password = "";
+		String string = "";
 		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		int higher = chars.length()-1; 
 		int lower = 0; 
 		for(int i = 0 ; i < x ; i++){
 			int y = (int)(Math.random() * (higher + 1 - lower)) + lower;
-			password += chars.charAt(y);
+			string += chars.charAt(y);
 		}
-		return password;
+		return string;
 	}
+	
+	/**
+	 * Methode de génération d'identifiants aléatoire.
+	 * 
+	 * @param x : int
+	 * @return string : String
+	 */
+	public String genererId(){
+		String retour = "";
+		String tmp = "";
+		String chars = "abcdefghijklmnopqrstuvwxyz";
+		String digits = "0123456789";
+		int higher = chars.length()-1; 
+		int lower = 0; 
+		int y = (int)(Math.random() * (higher + 1 - lower)) + lower;
+		tmp += chars.charAt(y);
+		retour = tmp;
+		higher = digits.length()-1; 
+		lower = 0; 
+		for(int i = 0 ; i < 2 ; i++){
+			y = (int)(Math.random() * (higher + 1 - lower)) + lower;
+			tmp += digits.charAt(y);
+		}
+		retour += tmp;
+		return retour;
+	}
+
 }

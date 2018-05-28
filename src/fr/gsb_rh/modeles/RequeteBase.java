@@ -8,14 +8,12 @@ import javax.swing.JOptionPane;
 
 /**
  * Classe de manipulation des données que contient la bdd gsb_appli_frais
- * 
+
  * @author antoine & audrey
  * @version 1.0
  * @see DbConnect.java
- * 
  */
 public class RequeteBase {
-	
 	private static Statement query;
 	private static ResultSet returnQuery; 
 	
@@ -23,77 +21,91 @@ public class RequeteBase {
 	* Constructeur par défaut de l'objet QueryObject
 	*/
 	public RequeteBase(){}
-	
-	/**
-	 * Méthode de test de connexion 
-	 * 
-	 * @param login String : Le login d'un RH qui veut se connecter 
-	 * @param mdp String : Son mot de passe
-	 * @return flag boolean : vrai si ses login/mdp correspondent et qu'il est du bon service, false sinon.
-	 * String idUser, String nomUser, String prenomUser, int idServiceUser
-	 */
-	public static boolean estConnecte(String login , String mdp ){
-		boolean flag = false;
-		returnQuery = null; 
-		String select = "SELECT id,nom,prenom,id_service,login,mdp FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"'";
-		try{
-			Connection dbConnect = DbConnect.getDbConnect();
-			returnQuery = dbConnect.createStatement().executeQuery(select);
-			if(returnQuery.first())
-				flag = true;			
-		}
-		catch (SQLException e){
-			e.printStackTrace();
-		}finally{
-				try{
-					returnQuery.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}finally{
-					DbConnect.destroyDbConnect();
-					returnQuery = null;
-				}
-			}	
-		return flag;	
-	}
-	public static boolean verifDroits(String login , String mdp){
-		boolean flag = false;
-		returnQuery = null; 
-		String select = "SELECT login,mdp FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"' AND id_service = 3";
-		try{
-			Connection dbConnect = DbConnect.getDbConnect();
-			returnQuery = dbConnect.createStatement().executeQuery(select);
-			if(returnQuery.first())
-				flag = true;
-		}
-		catch (SQLException e){
-			e.printStackTrace();
-		}finally{
-				try{
-					returnQuery.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}finally{
-					DbConnect.destroyDbConnect();
-					returnQuery = null;
-				}
-			}	
-		return flag;	
-	}
 		
 	/**
-	 * Methode retournant l'id d'un utilisateur par rapport à son login
+	 * Méthode de test du mot de passe et du login d'un utilisateur.
+	 * Le booléen passe à vrai si les logs concordent.
 	 * 
-	 * @param login String : Le login de l'utilisateur voulant se connecter
-	 * @return id String : Son identifiant unique
+	 * @param log : String
+	 * @param mdp : String
+	 * @return estConnecte : Boolean
+	 */
+	public static boolean estConnecte(String login , String mdp ){
+		boolean estConnecte = false;
+		returnQuery = null; 
+		String select = "SELECT id FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"'";
+		try{
+			Connection dbConnect = DbConnect.getDbConnect();
+			returnQuery = dbConnect.createStatement().executeQuery(select);
+			if(returnQuery.first())
+				estConnecte = true;			
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}finally{
+				try{
+					returnQuery.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}finally{
+					DbConnect.destroyDbConnect();
+					returnQuery = null;
+				}
+			}	
+		return estConnecte;	
+	}
+	
+	/**
+	 * Méthode de test des droits d'un utilisateur.
+	 * Le booléen passe à vrai si l'utilisateur est un RH (id_service = 3).
+	 * 
+	 * @param log : String
+	 * @param mdp : String
+	 * @return aLesDroits : Boolean
+	 */
+	public static boolean verifDroits(String login , String mdp){
+		boolean aLesDroits = false;
+		returnQuery = null; 
+		String select = "SELECT id FROM visiteur WHERE login='"+login+"'AND mdp='"+mdp+"' AND id_service = 3";
+		try{
+			Connection dbConnect = DbConnect.getDbConnect();
+			returnQuery = dbConnect.createStatement().executeQuery(select);
+			if(returnQuery.first())
+				aLesDroits = true;
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}finally{
+				try{
+					returnQuery.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}finally{
+					DbConnect.destroyDbConnect();
+					returnQuery = null;
+				}
+			}	
+		return aLesDroits;	
+	}
+		
+	
+	/**
+	 * Methode qui retourne un objet Employe par rapport à son login
+	 * 
+	 * @param login : String
+	 * @return id : String 
 	 */
 	public static Employe getEmployeConnecte(String login){
-		String select = "SELECT id,nom,prenom,id_service FROM visiteur WHERE login="+login+"";
+		String select = "SELECT id,nom,prenom,id_service FROM visiteur WHERE login='"+login+"'";
 		Employe unEmploye = null;
 		try{
 			Connection dbConnect = DbConnect.getDbConnect();
 			returnQuery = dbConnect.createStatement().executeQuery(select);
-			unEmploye = new Employe(returnQuery.getString("id"),returnQuery.getString("nom"),returnQuery.getString("prenom"),returnQuery.getInt("id_service"));
+			returnQuery.first();
+			unEmploye = new Employe(returnQuery.getString("id"),
+									returnQuery.getString("nom"),
+									returnQuery.getString("prenom"),
+									returnQuery.getInt("id_service"));
 		}
 		catch (SQLException e){
 			e.printStackTrace();
@@ -112,10 +124,9 @@ public class RequeteBase {
 	}
 	
 	/**
-	 * Méthode de création d'utilisateur. 
+	 * Méthode de création d'un utilisateur. 
 	 * Il faut renseigner toutes les informations personnelles de l'utilisateur afin qu'il puisse être ajouté en base.
-	 * 
-	 * @param unEmploye
+	 * @param unEmploye : Employe
 	 */
 	public static void AjoutEmploye(Employe unEmploye){
 		String insert = "INSERT INTO "
@@ -142,16 +153,21 @@ public class RequeteBase {
 		}
 	}
 	
-	
-	public static Employe unEmploye (String nom, String prenom)
+	/**
+	 * Méthode qui retourne un objet Employe complet grâce au nom et prénom d'un employé selectionné 
+	 * @param nom : String
+	 * @param prenom : String
+	 * @return unEmploye : Employe
+	 */
+	public static Employe unEmploye (String nom,String prenom)
 	{
 		Employe UnEmploye = null;
 		try{
-			String select = "SELECT * FROM visiteur WHERE nom='"+nom+"' and prenom='"+prenom+"'"; 
+			String select = "SELECT * FROM visiteur WHERE nom='"+nom+"' AND prenom='"+prenom+"'"; 
 			query = DbConnect.getDbConnect().createStatement();
 			returnQuery = query.executeQuery(select);
 			returnQuery.first();
-				UnEmploye = new Employe(returnQuery.getString("id"),
+			UnEmploye = new Employe(returnQuery.getString("id"),
 						returnQuery.getString("nom"),
 						returnQuery.getString("prenom"),
 						returnQuery.getString("login"),
@@ -180,20 +196,14 @@ public class RequeteBase {
 			}
 			
 		}
-		return UnEmploye;
-		
+		return UnEmploye;	
 	}
-	
-	
-	
-	
-	
-	
+		
 	/**
 	 * Méthode de modification d'un utilisateur. 
 	 * Il faut renseigner toutes les informations personnelles de l'utilisateur afin qu'elles puissent être modifiés en base.
 	 * 
-	 * @param unEmploye
+	 * @param unEmploye : Employe
 	 */
 	public static void modifierEmploye(Employe unEmploye){
 		String update = "UPDATE "
@@ -227,8 +237,9 @@ public class RequeteBase {
 	}
 	
 	/**
-	 * Methode qui renvoie tous les utilisateurs qui ne sont plus dans l'entreprise.
-	 * @return lesEmployes ArrayList<Employe>: Contient les objets Employe 
+	 * Methode qui retourne tous les utilisateurs qui ne sont plus dans l'entreprise (dateDepart < aujourd'hui).
+	 * 
+	 * @return lesEmployes : ArrayList<Employe>
 	 */
 	public static ArrayList<Employe> getLesUsersParti(){
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();
@@ -263,12 +274,13 @@ public class RequeteBase {
 	}
 	
 	/**
-	 * Méthode permettant de récupérer l'ensemble des id et nom des services
+	 * Méthode permettant de récupérer les libellés des services
 	 * 
-	 * @return lesServices Hashtable<Integer,String> : Dictionnaire contenant les services
+	 * @return lesServices : String[]
 	 */
 	public static String[] getLesServices(){
 		int i = 0;
+		int row = 0;
 		String[] lesServices = null;
 		String select = "SELECT * FROM service";
 		try{
@@ -277,7 +289,7 @@ public class RequeteBase {
 			//Place le pointeur à la fin du tableau
 			returnQuery.last();
 			//on récupère l'indice du dernier element du tableau
-			int row = returnQuery.getRow();
+			row = returnQuery.getRow();
 			//On reviens à l'indice 0
 			returnQuery.beforeFirst();
 			//On initialise le tableau avec le nombre d'elements
@@ -292,7 +304,6 @@ public class RequeteBase {
 			try{
 				returnQuery.close();
 			}catch (SQLException e){
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally{
 				DbConnect.destroyDbConnect();
@@ -301,10 +312,6 @@ public class RequeteBase {
 		}
 		return lesServices;
 	}
-	
-	
-	
-	
 	
 	/**
 	 * Méthode de récupération de tous les utilisateurs de la base de données gsb_appli_frais
@@ -343,29 +350,23 @@ public class RequeteBase {
 	
 	/**
 	 * Méthode de récupération de tous les utilisateurs
-	 * @return lesEmployés 
+	 * @return lesEmployés  : ArrayList<Employe>
 	 */
 	public static ArrayList<String> listerEmployes(){
+		String sql= "SELECT id, nom, prenom FROM visiteur";
 		ArrayList<String> lesEmployes = new ArrayList<String>();
 		Statement requete = null;
 		ResultSet lecture = null;
-		
 		try {
 			requete = DbConnect.getDbConnect().createStatement();
-			String sql = "SELECT id, nom, prenom FROM visiteur;";
 			lecture = requete.executeQuery(sql);
-			
-			if(lecture != null)
-			{
-				while(lecture.next()){
+			if(lecture != null){
+				while(lecture.next())
 					lesEmployes.add(lecture.getString("id") + " " + lecture.getString("nom") + " " + lecture.getString("prenom"));
-				}
 			}
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		}catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "impossible de lister les employés");
-			//e.printStackTrace();
 		}finally{
 			DbConnect.destroyDbConnect();
 		}
@@ -411,8 +412,8 @@ public class RequeteBase {
 	
 	/**
 	 * Méthode de récupération de tous les utilisateurs d'un service
-	 * @param x : int : Entier correspondant au service souhaité
-	 * @return users : Hastable<String,String> :un dictionnaire où est renseigné l'id en clé et son nom en valeur de chaque utilisateur
+	 * @param x : int 
+	 * @return users : ArrayList<Employe>
 	 */
 	public static ArrayList<Employe> getTousLesUsers(int x){
 		ArrayList<Employe> lesEmployes = new ArrayList<Employe>();

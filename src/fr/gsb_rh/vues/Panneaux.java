@@ -1,12 +1,20 @@
 package fr.gsb_rh.vues;
 
+
+import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
-
 import fr.gsb_rh.controleurs.Controlleur;
 
-public abstract class Panneaux extends JPanel {
+/**
+ * Classe abstraite qui regroupe toutes les méthodes utilisées dans les différents panneaux
+ * @see PanneauAjout.java
+ * @see PanneauModifier.java
+ * @author antoine & audrey
+ * @version 1.0
+ */
+public abstract class Panneaux extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -733261604364482113L;
 	protected Champ nom = new Champ("Nom : *"); 
 	protected Champ prenom = new Champ("Prénom : *"); 
@@ -20,16 +28,16 @@ public abstract class Panneaux extends JPanel {
 	protected Champ mdp; 
 	protected Champ DateDepart;
 	protected Controlleur controlleur = new Controlleur();
-	protected ChoixEmploye listService = new ChoixEmploye("Service : *", this.controlleur.listerService()); 
+	protected ChoixEmploye listService = new ChoixEmploye("Service : *", this.controlleur.listerService());
 
 
-	
+	/**
+	 * Méthode de remplissage des différents champs
+	 */
 	public void remplirChamp(){
 		this.nom.setDansSaisie(this.controlleur.getEmployeSelectionne().getNom());
 		this.prenom.setDansSaisie(this.controlleur.getEmployeSelectionne().getPrenom());
 		this.adresse.setDansSaisie(this.controlleur.getEmployeSelectionne().getAdresse());
-		this.Login.setDansSaisie(this.controlleur.getEmployeSelectionne().getlogin());
-		this.mdp.setDansSaisie(this.controlleur.getEmployeSelectionne().getMdp());
 		this.cp.setDansSaisie(this.controlleur.getEmployeSelectionne().getCP());
 		this.ville.setDansSaisie(this.controlleur.getEmployeSelectionne().getVille());
 		this.dateEmbauche.setDansSaisie(this.controlleur.DateFR(this.controlleur.getEmployeSelectionne().getDateEmbauche()));
@@ -38,6 +46,9 @@ public abstract class Panneaux extends JPanel {
 		this.listService.getComboBox().setSelectedIndex(this.controlleur.getEmployeSelectionne().getIdService()-1);
 	}
 	
+	/**
+	 * Méthode d'effacement des différents champs
+	 */
 	public void effacerChampSaisie(){
 		this.nom.effacerSaisie();
 		this.prenom.effacerSaisie();
@@ -47,18 +58,28 @@ public abstract class Panneaux extends JPanel {
 		this.ville.effacerSaisie();
 		this.telephone.effacerSaisie();
 		this.email.effacerSaisie();	
-		this.Login.effacerSaisie();
 	}
 	
+	
+	/**
+	 * Méthode de verification des champs
+	 * Le booléen passe à l'état vrai si tous les champs contiennent du texte 
+	 * @return estRempli : boolean
+	 */
 	public boolean verifSaisie(){
-		boolean flag = false;
+		boolean estRempli = false;
 		if(this.nom.VerifierChamps()&&this.prenom.VerifierChamps()&&this.email.VerifierChamps()&&
 		   this.adresse.VerifierChamps()&&this.cp.VerifierChamps()&&this.ville.VerifierChamps()&&
 		   this.dateEmbauche.VerifierChamps()&&this.telephone.VerifierChamps())
-			flag = true;
-		return flag;
+			estRempli = true;
+		return estRempli;
 		
-	}
+	}	
+	
+	/**
+	 * Méthode de placement des différents champs  = panneauxAjout
+	 * @return content : JPanel
+	 */
 	public JPanel placerChamps(){
 		//SpringLayout
 		JPanel content = new JPanel(new SpringLayout());
@@ -121,6 +142,10 @@ public abstract class Panneaux extends JPanel {
 		return content;
 	}
 	
+	/**
+	 * Méthode de placement des différents champs = panneauxModifier
+	 * @return content : JPanel
+	 */
 	public JPanel placerChamps(boolean flag){
 		//SpringLayout
 		this.DateDepart = new Champ("Date de départ(JJMMAAAA) : *");

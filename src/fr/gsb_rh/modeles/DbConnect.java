@@ -4,7 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 /**
  * Classe de connexion à la base de données de GSB.
- * @author antoine
+ * @author antoine & audrey
  * @version 1.0
  * @see RequeteBase
  * */
